@@ -12,8 +12,6 @@
 #define PRINT_RESULT 0
 #define COMPUTE_GFLOPS 0
 
-#define VECTOR_WIDTH_IN_FLOATS 8
-#define ALIGNMENT 256 // in bytes
 #define REAL_PEAK_GFLOPS_PER_CORE (1.6 /*GHz*/ * 8 /*vector width*/ * 2 /*fma*/)
 
 
@@ -137,6 +135,21 @@ void printCorrelatorType(int correlatorType)
     case CORRELATOR_2X2:
 	cout << "2x2";
 	break;
+    case CORRELATOR_1X1_RVV:
+	cout << "1x1-RVV";
+	break;
+    case CORRELATOR_1X1_TIME_RVV:
+	cout << "1x1-time-RVV";
+	break;
+    case CORRELATOR_2X2_RVV:
+	cout << "2x2-RVV";
+	break;
+    case CORRELATOR_2X2_TIME_RVV:
+	cout << "2x2-time-RVV";
+	break;
+    case CORRELATOR_3X2_TIME_RVV:
+	cout << "3x2-time-RVV";
+	break;
     default:
 	cout << "illegal correlator" << endl;
 	exit(66);
@@ -159,6 +172,9 @@ void* runCorrelator(void* data)
 	    break;
 	case CORRELATOR_2X2:
 	    p->ops = cpuCorrelator_2x2(p->samples, p->visibilities, nrTimes, nrTimesWidth, nrStations, nrChannels, &p->bytesLoaded, &p->bytesStored);
+	    break;
+	case CORRELATOR_1X1_TIME_RVV:
+	    p->ops = cpuCorrelator_1x1_time_rvv(p->samples, p->visibilities, nrTimes, nrTimesWidth, nrStations, nrChannels, &p->bytesLoaded, &p->bytesStored);
 	    break;
 	default:
 	    cout << "illegal correlator" << endl;
@@ -210,6 +226,10 @@ int main()
 			       nrThreads, maxGflops, verbose, validateResults);
 	
 	spawnCorrelatorThreads(CORRELATOR_2X2, runCorrelator, samples, arraySize,
+			       visibilities, visArraySize, nrTimes, nrStations, nrChannels,
+			       nrThreads, maxGflops, verbose, validateResults);
+	
+	spawnCorrelatorThreads(CORRELATOR_1X1_TIME_RVV, runCorrelator, samples, arraySize,
 			       visibilities, visArraySize, nrTimes, nrStations, nrChannels,
 			       nrThreads, maxGflops, verbose, validateResults);
     }
