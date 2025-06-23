@@ -130,23 +130,14 @@ unsigned long long cpuCorrelator_1x1_time_rvv(const float* __restrict__ samples,
 
 	    size_t vis_index = VISIBILITIES_INDEX(baseline, channel, 0, 0, 0);
 	    
-	    float res_xxr = reduce_vfloat32m8(xxr);
-	    float res_xxi = reduce_vfloat32m8(xxi);
-	    float res_xyr = reduce_vfloat32m8(xyr);
-	    float res_xyi = reduce_vfloat32m8(xyi);
-	    float res_yxr = reduce_vfloat32m8(yxr);
-	    float res_yxi = reduce_vfloat32m8(yxi);
-	    float res_yyr = reduce_vfloat32m8(yyr);
-	    float res_yyi = reduce_vfloat32m8(yyi);
-	    
-	    visibilities[vis_index+0] = res_xxr;
-	    visibilities[vis_index+1] = res_xxi;
-	    visibilities[vis_index+2] = res_xyr;
-	    visibilities[vis_index+3] = res_xyi;
-	    visibilities[vis_index+4] = res_yxr;
-	    visibilities[vis_index+5] = res_yxi;
-	    visibilities[vis_index+6] = res_yyr;
-	    visibilities[vis_index+7] = res_yyi;
+	    visibilities[vis_index+0] = reduce_vfloat32m8(xxr);
+	    visibilities[vis_index+1] = reduce_vfloat32m8(xxi);
+	    visibilities[vis_index+2] = reduce_vfloat32m8(xyr);
+	    visibilities[vis_index+3] = reduce_vfloat32m8(xyi);
+	    visibilities[vis_index+4] = reduce_vfloat32m8(yxr);
+	    visibilities[vis_index+5] = reduce_vfloat32m8(yxi);
+	    visibilities[vis_index+6] = reduce_vfloat32m8(yyr);
+	    visibilities[vis_index+7] = reduce_vfloat32m8(yyi);
 	}
     }
 
