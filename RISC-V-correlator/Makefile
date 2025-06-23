@@ -5,7 +5,7 @@ CC_FLAGS	= -O3 -x c++ -march=rv64gcv_zba_zbb_zbs -Wall
 #CC		= clang++
 #CC_FLAGS	= -O3 -x c++ --target=riscv64 -march=rv64gcv_zba_zbb_zbs -Wall
 
-LINK_FLAGS   = -lpthread
+CC_LINK_FLAGS   = -lpthread
 
 CC_SOURCES	= ../common/common.cc ../common/reference_correlator.cc \
 		  ../common/cpu_correlator_1x1.cc ../common/cpu_correlator_2x1.cc \
