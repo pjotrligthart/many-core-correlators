@@ -35,7 +35,7 @@ vfloat32m8_t i_vfloat32m8(const float val)
 }
 
 // (Temporary?) function that reduces/sums all values in a vfloat32m8 to a single float
-inline float reduce_vfloat32m8(const vfloat32m8_t &src)
+float reduce_vfloat32m8(const vfloat32m8_t &src)
 {
     vfloat32m1_t zero = __riscv_vfmv_s_f_f32m1(0.0f, 1);
     vfloat32m1_t res = __riscv_vfmv_s_f_f32m1(0.0f, 1);
