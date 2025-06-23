@@ -40,9 +40,9 @@ inline float reduce_vfloat32m8(const vfloat32m8_t &src)
     vfloat32m1_t zero = __riscv_vfmv_s_f_f32m1(0.0f, 1);
     vfloat32m1_t res = __riscv_vfmv_s_f_f32m1(0.0f, 1);
 
-    // TODO: Decide: use redosum or redusum? Which is faster?
-    // See https://dzaima.github.io/intrinsics-viewer/data/v-spec.html#sec-vector-float-reduce
-    res = __riscv_vfredosum_vs_f32m8_f32m1(src, zero, 8);
+    // Use vfredusum because it seems to be faster on our target board (BPI-F3)
+    // See benchmarks at https://camel-cdr.github.io/rvv-bench-results/bpi_f3/index.html
+    res = __riscv_vfredusum_vs_f32m8_f32m1(src, zero, 8);
     return __riscv_vfmv_f_s_f32m1_f32(res);
 }
 
