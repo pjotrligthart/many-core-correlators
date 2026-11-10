@@ -2,12 +2,11 @@
 #include "riscv_correlator.h"
 
 #include <cstring> 
-#include <complex>
-#include <cassert>
-#include <cstdlib>
 #include <iostream>
 #include <chrono>
 #include <riscv_vector.h>
+#include <thread>
+#include <barrier>
 
 #define PRINT_RESULT 0
 #define COMPUTE_GFLOPS 0
@@ -24,7 +23,9 @@ static const unsigned nrBaselines = NR_BASELINES(nrStations);
 static const unsigned nrTimes = 768, nrTimesWidth = 768; // 770
 static const unsigned nrChannels = 256;
 static const unsigned iter = 1;
-static const unsigned nrThreads = 8;
+static const unsigned nrThreads = std::thread::hardware_concurrency() ? std::thread::hardware_concurrency() : 1; // may return 0 when not able to detect;
+
+static std::barrier sync_point(nrThreads);
 
 vfloat32m8_t init_vfloat32m8(const float val)
 {
@@ -160,6 +161,10 @@ void* runCorrelator(void* data)
 {
     CorrelatorParams* p = (CorrelatorParams*) data;
 
+    sync_point.arrive_and_wait();
+
+    auto start_time = chrono::high_resolution_clock::now();
+
 	switch (p->correlatorType) {
 	case CORRELATOR_REFERENCE:
 	    p->ops = referenceCorrelator(p->samples, p->visibilities, nrTimes, nrTimesWidth, nrStations, nrChannels, &p->bytesLoaded, &p->bytesStored);
@@ -180,6 +185,11 @@ void* runCorrelator(void* data)
 	    cout << "illegal correlator" << endl;
 	    exit(66);
 	}
+
+    sync_point.arrive_and_wait();
+
+    auto end_time = chrono::high_resolution_clock::now();
+    p->elapsedNanos = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time).count();
 
 #if PRINT_RESULT
     printResult(visibilities, nrChannels, nrBaselines);
@@ -214,8 +224,10 @@ int main()
     float* visibilities= new (align_val_t{ALIGNMENT}) float[nrThreads*visArraySize];
     memset(visibilities, 0, nrThreads*visArraySize*sizeof(float));
 
+    initSamples(samples, nrThreads, nrTimes, nrTimesWidth, nrStations, nrChannels, arraySize);
+
     for(unsigned i=0; i<iter; i++) {
-	initSamples(samples, nrThreads, nrTimes, nrTimesWidth, nrStations, nrChannels, arraySize);
+	//initSamples(samples, nrThreads, nrTimes, nrTimesWidth, nrStations, nrChannels, arraySize);
 	
 	spawnCorrelatorThreads(CORRELATOR_1X1, runCorrelator, samples, arraySize,
 			       visibilities, visArraySize, nrTimes, nrStations, nrChannels,
