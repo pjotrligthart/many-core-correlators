@@ -9,7 +9,6 @@
 #include <barrier>
 
 #define PRINT_RESULT 0
-#define COMPUTE_GFLOPS 0
 
 #define REAL_PEAK_GFLOPS_PER_CORE (1.6 /*GHz*/ * 8 /*vector width*/ * 2 /*fma*/)
 
@@ -213,11 +212,7 @@ int main()
     cout << "Memory: sample array size = " << (((double)arraySize * nrThreads * sizeof(float))/(1024.0*1024.0)) << " mbytes, "
 	 << "vis array size = " << (((double)visArraySize * nrThreads * sizeof(float))/(1024.0*1024.0)) << " mbytes" << endl;
 
-#if COMPUTE_GFLOPS
-    double maxGflops = computeMaxGflops(nrThreads, calcMaxFlops, NULL);
-#else 
-    double maxGflops = REAL_PEAK_GFLOPS_PER_CORE * nrThreads;
-#endif // COMPUTE_GFLOPS
+    double maxGflops = computeMaxGflops(nrThreads, calcMaxFlops, 0);
     cout << "peak flops with " << nrThreads << " threads is: " << maxGflops << " gflops" << std::endl;
     
     float* samples = new (align_val_t{ALIGNMENT}) float[nrThreads*arraySize];
