@@ -204,14 +204,14 @@ int main()
     size_t vl = __riscv_vsetvl_e32m8(VECTOR_WIDTH_IN_FLOATS);
     cout << "vector length = " << vl << " 32 bit floats, ";
     cout << "timer resolution is " << chrono::high_resolution_clock::period::den << " ticks per second" << endl;
-    cout << "Configuration: " << nrStations << " stations, " << nrBaselines <<
-	" baselines, " << nrChannels << " channels, " << nrTimes << " time samples" << endl;
+    cout << "Problem configuration: " << nrStations << " stations, " << nrBaselines <<
+	" baselines, " << nrChannels << " channels, " << nrTimes << " time samples, " << iter << " iterations" << endl;
 
     const size_t arraySize = nrStations*nrChannels*nrTimesWidth*NR_POLARIZATIONS*2;
     const size_t visArraySize = nrBaselines*nrChannels*NR_POLARIZATIONS* NR_POLARIZATIONS*2;
 
-    cout << "sample array size = " << ((arraySize * nrThreads * sizeof(float))/(1024*1024)) << " mbytes, "
-	 << "vis array size = " << ((visArraySize * nrThreads * sizeof(float))/(1024*1024)) << " mbytes" << endl;
+    cout << "Memory: sample array size = " << (((double)arraySize * nrThreads * sizeof(float))/(1024.0*1024.0)) << " mbytes, "
+	 << "vis array size = " << (((double)visArraySize * nrThreads * sizeof(float))/(1024.0*1024.0)) << " mbytes" << endl;
 
 #if COMPUTE_GFLOPS
     double maxGflops = computeMaxGflops(nrThreads, calcMaxFlops, NULL);
