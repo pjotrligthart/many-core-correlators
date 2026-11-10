@@ -1,6 +1,6 @@
 CC		= g++
 #CC		= riscv64-linux-gnu-g++
-CC_FLAGS	= -O3 -x c++ -march=rv64gcv_zba_zbb_zbs -Wall 
+CC_FLAGS	= -std=c++20 -O3 -x c++ -march=rv64gcv_zba_zbb_zbs -Wall 
 
 #CC		= clang++
 #CC_FLAGS	= -O3 -x c++ --target=riscv64 -march=rv64gcv_zba_zbb_zbs -Wall
