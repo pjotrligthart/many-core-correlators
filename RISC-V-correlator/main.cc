@@ -199,9 +199,17 @@ void* runCorrelator(void* data)
 
 int main()
 {
+    if(nrStations > MAX_NR_STATIONS) {
+	cerr << "Cannot use more than " << MAX_NR_STATIONS << " stations." << endl;
+    }
+
     // set the vector length
     size_t vl = __riscv_vsetvl_e32m8(VECTOR_WIDTH_IN_FLOATS);
-    cout << "vector length = " << vl << " 32 bit floats, ";
+    // TODO: riscv: implement printVectorType and print vector type in message in main
+    cout << "Hardware configuration: ";
+    //printVectorType();
+    //cout << " vector extensions, ";
+    cout << "with vectors of width " << vl << " floats, and " << nrThreads << " threads"<< endl;
     cout << "timer resolution is " << chrono::high_resolution_clock::period::den << " ticks per second" << endl;
     cout << "Problem configuration: " << nrStations << " stations, " << nrBaselines <<
 	" baselines, " << nrChannels << " channels, " << nrTimes << " time samples, " << iter << " iterations" << endl;
@@ -213,7 +221,7 @@ int main()
 	 << "vis array size = " << (((double)visArraySize * nrThreads * sizeof(float))/(1024.0*1024.0)) << " mbytes" << endl;
 
     double maxGflops = computeMaxGflops(nrThreads, calcMaxFlops, 0);
-    cout << "peak flops with " << nrThreads << " threads is: " << maxGflops << " gflops" << std::endl;
+    cout << "peak flops is: " << maxGflops << " gflops" << std::endl;
     
     float* samples = new (align_val_t{ALIGNMENT}) float[nrThreads*arraySize];
     float* visibilities= new (align_val_t{ALIGNMENT}) float[nrThreads*visArraySize];
