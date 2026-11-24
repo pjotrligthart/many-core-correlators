@@ -180,6 +180,9 @@ void* runCorrelator(void* data)
 	case CORRELATOR_1X1_TIME_RVV:
 	    p->ops = cpuCorrelator_1x1_time_rvv(p->samples, p->visibilities, nrTimes, nrTimesWidth, nrStations, nrChannels, &p->bytesLoaded, &p->bytesStored);
 	    break;
+	case CORRELATOR_2X2_TIME_RVV:
+	    p->ops = cpuCorrelator_2x2_time_rvv(p->samples, p->visibilities, nrTimes, nrTimesWidth, nrStations, nrChannels, &p->bytesLoaded, &p->bytesStored);
+	    break;
 	default:
 	    cout << "illegal correlator" << endl;
 	    exit(66);
@@ -245,6 +248,10 @@ int main()
 			       nrThreads, maxGflops, verbose, validateResults);
 	
 	spawnCorrelatorThreads(CORRELATOR_1X1_TIME_RVV, runCorrelator, samples, arraySize,
+			       visibilities, visArraySize, nrTimes, nrStations, nrChannels,
+			       nrThreads, maxGflops, verbose, validateResults);
+	
+	spawnCorrelatorThreads(CORRELATOR_2X2_TIME_RVV, runCorrelator, samples, arraySize,
 			       visibilities, visArraySize, nrTimes, nrStations, nrChannels,
 			       nrThreads, maxGflops, verbose, validateResults);
     }
