@@ -24,7 +24,7 @@ static unsigned fillCellToStatTable(const unsigned nrStations)
     return baseline;
 }
 
-vfloat32m8_t i_vfloat32m8(const float val)
+inline vfloat32m8_t i_vfloat32m8(const float val)
 {
     float result[VECTOR_WIDTH_IN_FLOATS];
     for(int i = 0; i < VECTOR_WIDTH_IN_FLOATS; i++) {
@@ -34,8 +34,8 @@ vfloat32m8_t i_vfloat32m8(const float val)
     return __riscv_vle32_v_f32m8(result, VECTOR_WIDTH_IN_FLOATS);
 }
 
-// (Temporary?) function that reduces/sums all values in a vfloat32m8 to a single float
-float reduce_vfloat32m8(const vfloat32m8_t &src)
+//// (Temporary?) function that reduces/sums all values in a vfloat32m8 to a single float
+inline float reduce_vfloat32m8(const vfloat32m8_t &src)
 {
     vfloat32m1_t zero = __riscv_vfmv_s_f_f32m1(0.0f, 1);
     vfloat32m1_t res = __riscv_vfmv_s_f_f32m1(0.0f, 1);
