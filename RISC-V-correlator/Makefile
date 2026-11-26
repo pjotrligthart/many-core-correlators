@@ -16,7 +16,8 @@ CC_SOURCES	= ../common/common.cc ../common/reference_correlator.cc \
 		  ../common/cpu_correlator_1x1.cc ../common/cpu_correlator_2x1.cc \
 		  ../common/cpu_correlator_2x2.cc main.cc \
 		  cpu_correlator_1x1_time_rvv.cc \
-		  cpu_correlator_2x2_time_rvv.cc
+		  cpu_correlator_2x2_time_rvv.cc \
+		  cpu_correlator_3x2_time_rvv.cc
 
 CC_OBJECTS	= $(CC_SOURCES:%.cc=%.o)
 
